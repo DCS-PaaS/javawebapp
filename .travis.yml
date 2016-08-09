@@ -1,0 +1,32 @@
+sudo: required
+
+language: java
+
+services:
+  - docker
+
+# authenticate docker hub and pull image from repo
+before_install:
+- docker login -e DCS_PaaS@dell.com -u dcspaas -p Docker@123
+
+# create container, update code from repo, and start it
+before_script:
+- WORKING_DIR=$(pwd)
+- docker create -P dcspaas/javawebapp:latest
+- CONTAINER_ID=$(docker ps -lq)
+- docker cp webapp $CONTAINER_ID:/opt/
+- docker start $CONTAINER_ID
+
+# run unit tests (need to run this externally and internally)
+script:
+- python webapp/tests.py
+- docker exec $CONTAINER_ID python tests.py
+
+after_success:
+- WORKING_DIR=$(pwd)
+- docker pull tomcat:7
+- docker run -d -P tomcat:7
+- CONTAINER_ID=$(docker ps -lq)
+- docker cp $WORKING_DIR/dist/javawebapp.war $CONTAINER_ID:/usr/local/tomcat/webapps/
+- docker commit $CONTAINER_ID dcspaas/javawebapp:latest
+- docker push dcspaas/javawebapp:latest
