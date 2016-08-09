@@ -10,19 +10,12 @@ services:
 before_install:
 - docker login -e DCS_PaaS@dell.com -u dcspaas -p Docker@123
 
-# create container, update code from repo, and start it
-before_script:
-- WORKING_DIR=$(pwd)
-- docker create -P dcspaas/javawebapp:latest
-- CONTAINER_ID=$(docker ps -lq)
-- docker cp webapp $CONTAINER_ID:/opt/
-- docker start $CONTAINER_ID
 
-# run unit tests (need to run this externally and internally)
+# run build.xml config script
 script:
-- python webapp/tests.py
-- docker exec $CONTAINER_ID python tests.py
+- ant all
 
+# upload .war file to image and push to Docker hub
 after_success:
 - WORKING_DIR=$(pwd)
 - docker pull tomcat:7
