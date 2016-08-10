@@ -1,9 +1,7 @@
 <project name="My Project" default="help" basedir=".">
   <!-- Define the properties used by the build -->
-  <property name="app.name"      value="hello"/>
-  <property environment="env"/>
-  <property name="tcserver.home" value="${env.JAVA_HOME}" />
-  <echo message="JAVA_HOME is set to = ${env.JAVA_HOME}" />
+  <property name="app.name"      value="javawebapp"/>
+  <property name="tcserver.home" value="/usr/local/tomcat" />
   <property name="work.home"    value="${basedir}/work"/>
   <property name="dist.home"     value="${basedir}/dist"/>
   <property name="src.home"      value="${basedir}/src"/>
@@ -67,7 +65,7 @@
 
   <target name="dist" depends="compile"
           description="Create WAR file for binary distribution">
-    <jar jarfile="${dist.home}/${app.name}.war"
+    <jar jarfile="${tcserver.home}/webapps/${app.name}.war"
          basedir="${work.home}"/>
   </target>
 
