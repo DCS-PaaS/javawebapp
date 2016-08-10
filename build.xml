@@ -1,6 +1,7 @@
 <project name="My Project" default="help" basedir=".">
   <!-- Define the properties used by the build -->
-  <property name="app.name"      value="javawebapp"/>
+  <property name="app.name"      value="hello"/>
+  <property name="tcserver.home" value="${JAVA_HOME}" />
   <property name="work.home"    value="${basedir}/work"/>
   <property name="dist.home"     value="${basedir}/dist"/>
   <property name="src.home"      value="${basedir}/src"/>
@@ -18,6 +19,17 @@
     <echo>For example, to clean, compile, and package all at once, run:</echo>
     <echo>prompt> ant all </echo>
   </target>
+
+  <!-- Define the CLASSPATH -->
+  <path id="compile.classpath">
+    <fileset dir="${tcserver.home}/bin">
+      <include name="*.jar"/>
+    </fileset>
+    <pathelement location="${tcserver.home}/lib"/>
+    <fileset dir="${tcserver.home}/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
 
   <target name="all" depends="clean,compile,dist"
           description="Clean work dirs, then compile and create a WAR"/>
@@ -42,6 +54,7 @@
           description="Compile Java sources and copy to WEB-INF/classes dir">
     <javac srcdir="${src.home}"
           destdir="${work.home}/WEB-INF/classes">
+        <classpath refid="compile.classpath"/>
     </javac>
     <copy  todir="${work.home}/WEB-INF/classes">
       <fileset dir="${src.home}" excludes="**/*.java"/>
