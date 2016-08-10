@@ -12,17 +12,21 @@ services:
 before_install:
 - docker login -e DCS_PaaS@dell.com -u dcspaas -p Docker@123
 
-
-# run build.xml config script
+# start up and build inside container
 script:
-- ant all
-
-# upload .war file to image and push to Docker hub
-after_success:
 - WORKING_DIR=$(pwd)
-- docker pull tomcat:7
-- docker run -d -P tomcat:7
+- docker pull dcspaas/javawebapp:latest
+- docker run -it dcspaas/javawebapp:latest bash
+- cd javawebapp/
+- git pull origin master
+- ant all
+- exit
 - CONTAINER_ID=$(docker ps -lq)
-- docker cp $WORKING_DIR/dist/javawebapp.war $CONTAINER_ID:/usr/local/tomcat/webapps/
+
+# commit image and push to docker hub
+after_success:
 - docker commit $CONTAINER_ID dcspaas/javawebapp:latest
+- docker create -P dcspaas/javawebapp:latest catalina.sh run
+- CONTAINER_ID=$(docker ps -lq)
+- docker commit $CONTAINER_ID dcspaas/javawebapp:latest 
 - docker push dcspaas/javawebapp:latest
