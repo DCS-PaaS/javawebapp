@@ -75,5 +75,4 @@
     <delete dir="${work.home}"/>
     <delete dir="${dist.home}"/>
   </target>
-
-</project> 
+</project>
