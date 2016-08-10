@@ -1,9 +1,7 @@
 <project name="My Project" default="help" basedir=".">
   <!-- Define the properties used by the build -->
-  <property name="app.name"      value="hello"/>
-  <property environment="env"/>
-  <property name="tcserver.home" value="${env.JAVA_HOME}" />
-  <echo message="JAVA_HOME is set to = ${env.JAVA_HOME}" />
+  <property name="app.name"      value="javawebapp"/>
+  <property name="tcserver.home" value="/usr/local/tomcat" />
   <property name="work.home"    value="${basedir}/work"/>
   <property name="dist.home"     value="${basedir}/dist"/>
   <property name="src.home"      value="${basedir}/src"/>
@@ -17,6 +15,7 @@
     <echo>  clean   : Deletes work directories</echo>
     <echo>  compile : Compiles servlets into class files</echo>
     <echo>  dist    : Packages artifacts into a deployable WAR</echo>
+    <echo>  reclean : Re-clean directory to clean slate git repo</echo>
     <echo></echo>
     <echo>For example, to clean, compile, and package all at once, run:</echo>
     <echo>prompt> ant all </echo>
@@ -33,7 +32,7 @@
     </fileset>
   </path>
 
-  <target name="all" depends="clean,compile,dist"
+  <target name="all" depends="clean,compile,dist,reclean"
           description="Clean work dirs, then compile and create a WAR"/>
 
   <target name="clean"
@@ -67,8 +66,14 @@
 
   <target name="dist" depends="compile"
           description="Create WAR file for binary distribution">
-    <jar jarfile="${dist.home}/${app.name}.war"
+    <jar jarfile="${tcserver.home}/webapps/${app.name}.war"
          basedir="${work.home}"/>
+  </target>
+
+  <target name="reclean"
+          description="Delete old work and dist directories">
+    <delete dir="${work.home}"/>
+    <delete dir="${dist.home}"/>
   </target>
 
 </project> 
