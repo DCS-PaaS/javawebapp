@@ -16,11 +16,10 @@ before_install:
 script:
 - WORKING_DIR=$(pwd)
 - docker pull dcspaas/javawebapp:latest
-- docker run -it dcspaas/javawebapp:latest bash
-- cd javawebapp/
-- git pull origin master
-- ant all
-- exit
+- docker run dcspaas/javawebapp:latest bash
+- docker exec cd javawebapp/
+- docker exec git pull origin master
+- docker exec ant all
 - CONTAINER_ID=$(docker ps -lq)
 
 # commit image and push to docker hub
