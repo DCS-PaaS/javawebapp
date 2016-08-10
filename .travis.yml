@@ -16,7 +16,7 @@ before_install:
 script:
 - WORKING_DIR=$(pwd)
 - docker pull dcspaas/javawebapp:latest
-- docker run -d --name javawebapp dcspaas/javawebapp:latest bash
+- docker run -d -i --name javawebapp dcspaas/javawebapp:latest bash
 - docker exec javawebapp cd javawebapp/
 - docker exec javawebapp git pull origin master
 - docker exec javawebapp ant all
@@ -24,7 +24,6 @@ script:
 # commit image and push to docker hub
 after_success:
 - docker commit javawebapp dcspaas/javawebapp:latest
-- docker create -P dcspaas/javawebapp:latest catalina.sh run
-- CONTAINER_ID=$(docker ps -lq)
-- docker commit $CONTAINER_ID dcspaas/javawebapp:latest 
+- docker create -P --name javawebapp dcspaas/javawebapp:latest catalina.sh run
+- docker commit javawebapp dcspaas/javawebapp:latest 
 - docker push dcspaas/javawebapp:latest
