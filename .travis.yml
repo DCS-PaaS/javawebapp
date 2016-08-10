@@ -17,7 +17,7 @@ script:
 - WORKING_DIR=$(pwd)
 - docker pull dcspaas/javawebapp:latest
 - docker run -d -i --name javawebapp dcspaas/javawebapp:latest bash
-- docker exec javawebapp cd javawebapp/
+- docker exec javawebapp bash -c "cd /usr/local/tomcat/javawebapp"
 - docker exec javawebapp git pull origin master
 - docker exec javawebapp ant all
 
