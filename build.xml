@@ -3,6 +3,7 @@
   <property name="app.name"      value="hello"/>
   <property environment="env"/>
   <property name="tcserver.home" value="${env.JAVA_HOME}" />
+  <echo>JAVA_HOME = {$env.JAVA_HOME}</echo>
   <property name="work.home"    value="${basedir}/work"/>
   <property name="dist.home"     value="${basedir}/dist"/>
   <property name="src.home"      value="${basedir}/src"/>
